@@ -1,0 +1,7 @@
+{
+        "dbms": "mysql",
+        "user": "root",
+        "pass": "admin",
+        "protocol": "tcp(127.0.0.1:3306)",
+        "dbname": "user_db"
+}
