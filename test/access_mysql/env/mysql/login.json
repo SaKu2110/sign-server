@@ -1,7 +1,7 @@
 {
         "dbms": "mysql",
-        "user": "root",
-        "pass": "admin",
+        "user": "keeper",
+        "pass": "admin_keeper",
         "protocol": "tcp(127.0.0.1:3306)",
         "dbname": "user_db"
 }

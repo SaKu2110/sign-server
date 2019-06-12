@@ -1,10 +1,9 @@
 package main
 
 import (
-        "../libexec/access_mysql"
+	"../libexec/server"
 )
 
 func main() {
-        db := access_mysql.Connect()
-        defer db.Close()
+	server.GinServer()
 }
