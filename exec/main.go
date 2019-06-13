@@ -1,9 +1,9 @@
 package main
 
 import (
-	"../libexec/server"
+        "../libexec/server"
 )
 
 func main() {
-	server.GinServer()
+        server.GinServer()
 }
