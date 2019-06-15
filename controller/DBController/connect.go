@@ -16,7 +16,7 @@ func (dbc *DBCnt)Connect () {
         db.USER     = "keeper"
         db.PASS     = "admin_keeper"
 	db.PROTOCOL = "tcp(127.0.0.1:3306)"
-        db.DBNAME   = "sign"
+        db.DBNAME   = "login"
         db.CONNECT = db.USER+":"+db.PASS+"@"+db.PROTOCOL+"/"+db.DBNAME
 
 	db.DB, err = gorm.Open(db.DBMS, db.CONNECT)

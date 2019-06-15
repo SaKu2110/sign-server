@@ -5,5 +5,5 @@ import(
 )
 
 func (gctl *GinCnt) Get (path string, handler func(*gin.Context)) {
-	gctl.Gin.GET(path)
+	gctl.Gin.GET(path, handler)
 }

@@ -14,13 +14,14 @@ var(
 
 func init() {
 	DB.Connect()
+	Res.DB = DB.DB
 }
 
 func main() {
 	Gin.Init()
 	Gin.Get("/ping", Res.PingHandler)
-	Gin.Post("/signin")
-	Gin.Post("/signup")
+	Gin.Post("/signin", Res.SigninHandler)
+	Gin.Post("/signup", Res.SignupHandler)
 	Gin.Run()
 	defer DB.Close()
 }

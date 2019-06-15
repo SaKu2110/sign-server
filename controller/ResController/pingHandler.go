@@ -4,6 +4,6 @@ import(
 	"github.com/gin-gonic/gin"
 )
 
-func (rctl *ResCnt) PingHandler (_g *gin.Context) {
-	rctl.Cntxt.JSON(200, gin.H{ "message": "pong" })
+func (_rctl *ResCnt) PingHandler (g *gin.Context) {
+	g.JSON(200, gin.H{ "message": "pong" })
 }
