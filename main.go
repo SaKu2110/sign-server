@@ -1,27 +1,36 @@
 package main
 
 import(
-	"github.com/SaKu2110/sign_server/controller/DBController"
-	"github.com/SaKu2110/sign_server/controller/GinController"
-	"github.com/SaKu2110/sign_server/controller/ResController"
+	"github.com/SaKu2110/sign-server/service/database"
+	"github.com/SaKu2110/sign-server/controllers"
+	"github.com/gin-gonic/gin"
+	"log"
 )
 
 var(
-	DB = &DBController.DBCnt{}
-	Gin = &GinController.GinCnt{}
-	Res = &ResController.ResCnt{}
+	SQL = &database.DB{}
+	CCH = &controller.CCH{}
 )
 
 func init() {
-	DB.Connect()
-	Res.DB = DB.DB
+	SQL.Connect()
+	// タイムアウト処理
+	if SQL.ERROR != nil {
+		log.Printf(SQL.MSG)
+		panic(SQL.ERROR.Error())
+	}
+	// ハンドラ内でDBの操作ができるようにする
+	CCH.DB = SQL.DB
 }
 
 func main() {
-	Gin.Init()
-	Gin.Get("/ping", Res.PingHandler)
-	Gin.Post("/signin", Res.SigninHandler)
-	Gin.Post("/signup", Res.SignupHandler)
-	Gin.Run()
-	defer DB.Close()
+	// Ginサーバの起動
+	gin := gin.Default()
+	gin.GET("/ping", CCH.PingHandler)
+	gin.POST("/signin", CCH.SignInHandler)
+	gin.POST("/signup", CCH.SignUpHandler)
+	if CCH.ERROR != nil {
+		log.Fatal(CCH.ERROR)
+	}
+	gin.Run()
 }

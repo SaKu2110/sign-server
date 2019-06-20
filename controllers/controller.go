@@ -1,9 +1,10 @@
-package DBController
+package controller
 
 import(
 	"github.com/jinzhu/gorm"
 )
 
-type DBCnt struct{
+type CCH struct {
 	DB	*gorm.DB
+	ERROR	error
 }
