@@ -11,6 +11,7 @@ type DB struct {
 	USER		string
 	PASS		string
 	PROTOCOL	string
+	PORT		string
 	DBNAME		string
 	CONNECT		string
 	MSG		string
