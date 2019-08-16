@@ -1,4 +1,4 @@
-# Authentication Server for SaKu.rb 〜永遠に続く、たった1日の恋〜 Special Summer Edition
+# sign-server
 ## 概要
 ict演習サーバー班　課題  
 - golang: go1.12.5 linux/amd64
