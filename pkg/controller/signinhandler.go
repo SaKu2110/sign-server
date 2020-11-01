@@ -53,7 +53,7 @@ func (ctrl *Controller) SignInHandler (cxt *gin.Context) {
 		)
 		return
 	}
-	if users[0].CastToString() != string(service.CreateHashWithPassord(password)){
+	if users[0].Password != service.CreateHashWithPassord(password) {
 		cxt.JSON(
 			http.StatusBadRequest,
 			view.MakeSignResponse(
@@ -64,7 +64,7 @@ func (ctrl *Controller) SignInHandler (cxt *gin.Context) {
 		return
 	}
 
-		// create token //
+	// create token //
 	token, err := service.CreateToken(id)
 	if err != nil {
 		cxt.JSON(
