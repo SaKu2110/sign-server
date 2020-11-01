@@ -14,7 +14,7 @@ func main() {
 	}
 	defer db.Close()
 	ctrl := controller.Init(db)
-	if err := server.Router(ctrl).Run(":9000"); err != nil {
+	if err := server.Router(ctrl).Run(); err != nil {
 		log.Fatal(err)
 	}
 }
