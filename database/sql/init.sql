@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS `auth`.`user`;
 CREATE TABLE `auth`.`user`
 (
  `id`       VARCHAR(256),
- `password` BINARY(32) NOT NULL,
+ `password` VARCHAR(256) NOT NULL,
  PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
