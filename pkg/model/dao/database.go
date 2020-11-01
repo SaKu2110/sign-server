@@ -54,7 +54,7 @@ func (db *DB) GetUserInfo(id string) (users []dto.UserInfo, err error) {
 	}
 	for rows.Next() {
 		var user dto.UserInfo
-		if err := rows.Scan(&user); err != nil {
+		if err := rows.Scan(&user); err != nil && err != sql.ErrNoRows {
 			return nil, err
 		}
 		users = append(users, user)
