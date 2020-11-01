@@ -1,22 +1,16 @@
-FROM golang:latest
-
-ENV GOPATH /go
-ENV PATH $PATH:$GOPATH/bin
-
-RUN go get github.com/SaKu2110/sign-server
+FROM golang:1.13-alpine AS build-env
 WORKDIR /go/src/github.com/SaKu2110/sign-server
+COPY ./ ./
+RUN go build -o server main.go
 
-RUN go get github.com/gin-gonic/gin
-RUN go get github.com/dgrijalva/jwt-go
-RUN go get github.com/jinzhu/gorm
-RUN go get github.com/jinzhu/gorm/dialects/mysql
-
-ENV DB_USER keeper
-ENV DB_PASS admin0000
+FROM alpine:latest
+RUN apk add --no-cache --update ca-certificates
+COPY --from=build-env /go/src/github.com/SaKu2110/sign-server/server /usr/local/bin/server
+ENV DB_USER auth_user
+ENV DB_PASS password
 ENV DB_IP mysql
 ENV DB_PORT 3306
-ENV DB_NAME sign
+ENV DB_NAME auth
 
-EXPOSE 8080
-
-CMD ["go", "run", "/go/src/github.com/SaKu2110/sign-server/main.go"]
+EXPOSE 9000
+CMD ["/usr/local/bin/server"]
