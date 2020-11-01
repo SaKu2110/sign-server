@@ -8,6 +8,6 @@ type Controller struct {
 	DB	*dao.DB
 }
 
-func Init() Controller {
-	return Controller{}
+func Init(db *dao.DB) Controller {
+	return Controller{DB: db}
 }
