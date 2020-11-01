@@ -10,9 +10,11 @@ const(
 	STATUS_CODE_500 = "Internal Server Error"
 )
 
-func MakeErrResponse(code int, err error) *dto.Error {
+func makeErrResponse(code int, err error) *dto.Error {
 	var msg string
 	switch code {
+	case 200:
+		return nil
 	case 400:
 		msg = STATUS_CODE_400
 	case 500:
@@ -25,6 +27,6 @@ func MakeErrResponse(code int, err error) *dto.Error {
 	}
 }
 
-func MakeSignResponse(token *string, err *dto.Error) dto.SignResponse {
-	return dto.SignResponse{Token: token, Err: err}
+func MakeSignResponse(code int, token *string, err error) dto.SignResponse {
+	return dto.SignResponse{Token: token, Err: makeErrResponse(code, err)}
 }
