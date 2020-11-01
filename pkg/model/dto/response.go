@@ -7,6 +7,6 @@ type Error struct {
 }
 
 type SignResponse struct {
-	Token	*string
-	Err		*Error
+	Token	*string	`json:"token"`
+	Err		*Error	`json:"error"`
 }
