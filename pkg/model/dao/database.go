@@ -53,8 +53,7 @@ func (db *DB) GetUserInfo(id string) (users []dto.UserInfo, err error) {
 		return nil, err
 	}
 	for rows.Next() {
-		var id string
-		var pass []byte
+		var id, pass string
 		if err := rows.Scan(&id, &pass); err != nil && err != sql.ErrNoRows {
 			return nil, err
 		}
@@ -63,7 +62,7 @@ func (db *DB) GetUserInfo(id string) (users []dto.UserInfo, err error) {
 	return
 }
 
-func (db *DB) InsertUserInfo(id string, password []byte) error {
+func (db *DB) InsertUserInfo(id string, password string) error {
 	result, err := db.DB.Prepare(QUERY_FORMAT_SET_USER_INFO)
 	if err != nil {
 		return err
