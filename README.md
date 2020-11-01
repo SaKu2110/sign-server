@@ -1,40 +1,27 @@
 # sign-server
+
+<p align="left">
+  <a href="https://github.com/actions/setup-node/actions?query=workflow%3Abuild-test"><img alt="build-test status" src="https://github.com/SaKu2110/sign-server/workflows/Go/badge.svg"></a>
+</p>
+
 ## 概要
 ict演習サーバー班　課題  
-- golang: go1.12.5 linux/amd64
-- mysql: 14.14 Distrib 5.7.26, for Linux (x86_64) using  EditLine wrapper
+1年の時を経て書き直したやつ
+- golang: 1.15.3 darwin/amd64
+
 ## 実装した機能
 - [GET] /ping  
   - Request: なし  
   - Response: {"message": "ping"} / HttpStatusCode(200)
 - [POST] /signin
-  - Request: {"id": 任意の文字列, "password": 任意の文字列}
-  - Response: {"access_token": 任意の文字列} / HttpStatusCode(200)  
+  - Request: Header: UserId `string`, Passwrod `string`
+  - Response: {"token": 任意の文字列} / HttpStatusCode(200)  
 
-※ access_tokenは，ログインするユーザ毎に重複がないようにすること
 - [POST] /signup
-  - Request: {"id": 任意の文字列, "password": 任意の文字列}
-  - Response: {"access_token": 任意の文字列} / HttpStatusCode(201)  
-
-※ access_tokenは，ログインするユーザ毎に重複がないようにすること
+  - Request: Header: UserId `string`, Passwrod `string`
+  - Response: {"token": 任意の文字列} / HttpStatusCode(201)  
 
 ## 実行手順
-0. `setup/lib/lib.sh`で必要なライブラリを落としてくる
-1. `exec`ディレクトリ内で`go run main.go`を実行
-2. `curl`コマンドで遊ぶ
+`make run`でapiを起動する
 
-## ファイル構成
-- ### env: 
-  コードに直接書きたくない情報をJSONにしたためています  
-  - #### mysql: MySQLにアクセスするユーザーとログイン情報
-- ### exec: 
-  main.goが格納されているファイル。ここでプログラムを実行します。
-- ### libexec: 
-  main.goの起動に必要なパッケージを呼び出します。
-  - #### server: ginサーバーを立てる
-  - #### access_mysql: mysqlとの接続を確立します
-  - #### auth: JWTでトークンを生成しています
-- ### setup: 
-  プログラムを実行するための諸々を用意するshellが入っています
-- ### test: 
-  ノリで書いたテストコードです。嘘です。テストコードもどきです。
+
