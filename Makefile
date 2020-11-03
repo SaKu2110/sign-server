@@ -6,5 +6,8 @@ DOCKER_DOWN=$(DOCKER) -f $(COMPOSE_PATH) down
 all:
 run:
 	$(DOCKER_UP) -d --build
+db-run:
+	$(DOCKER_UP) -d --build mysql
+	$(DOCKER_UP) -d --build phpmyadmin
 down:
 	$(DOCKER_DOWN) --volumes
