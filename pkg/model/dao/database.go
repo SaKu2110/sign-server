@@ -5,7 +5,7 @@ import(
 	"time"
 	"math"
 
-	// import gorm library
+	// import gorm library //
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 
@@ -47,7 +47,8 @@ func (db *DB) Close() {
 	db.DB.Close()
 }
 
-func (db *DB) GetUserInfo(id string) (users []dto.UserInfo, err error) {
+func (db *DB) GetUserInfo(id string) ([]dto.UserInfo, error) {
+	var users []dto.UserInfo
 	rows, err := db.DB.Query(QUERY_FORMAT_GET_USER_INFO, id)
 	if err != nil {
 		return nil, err
@@ -59,7 +60,7 @@ func (db *DB) GetUserInfo(id string) (users []dto.UserInfo, err error) {
 		}
 		users = append(users, dto.UserInfo{ID: id, Password: pass})
 	}
-	return
+	return users, nil
 }
 
 func (db *DB) InsertUserInfo(id string, password string) error {
