@@ -56,6 +56,7 @@ func (ctrl *Controller) SignInHandler (cxt *gin.Context) {
 	if err != nil {
 		errs := view.NewErrResponse(500, err)
 		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
+		return
 	}
 	cxt.JSON(http.StatusOK, view.NewSignResponse(&token, nil))
 }
