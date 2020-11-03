@@ -13,73 +13,49 @@ import(
 func (ctrl *Controller) SignUpHandler (cxt *gin.Context) {
 	var id, password string
 	if id = cxt.GetHeader("UserId"); id == "" {
-		cxt.JSON(
-			http.StatusBadRequest,
-			view.MakeSignResponse(
-				http.StatusBadRequest, nil,
-				errors.New("UserId value is empty."),
-			),
+		errs := view.NewErrResponse(
+			400,
+			errors.New("UserId value is empty."),
 		)
+		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 		return
 	}
 	if password = cxt.GetHeader("Password"); password == "" {
-		cxt.JSON(
-			http.StatusBadRequest,
-			view.MakeSignResponse(
-				http.StatusBadRequest, nil,
-				errors.New("Password value is empty."),
-			),
+		errs := view.NewErrResponse(
+			400,
+			errors.New("Password value is empty."),
 		)
+		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 		return
 	}
 	users, err := ctrl.DB.GetUserInfo(id)
 	if err != nil {
-		cxt.JSON(
-			http.StatusInternalServerError,
-			view.MakeSignResponse(
-				http.StatusInternalServerError,
-				nil, err,
-			),
-		)
+		errs := view.NewErrResponse(500, err)
+		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 		return
 	}
 	if len(users) > 0 {
-		cxt.JSON(
-			http.StatusBadRequest,
-			view.MakeSignResponse(
-				http.StatusBadRequest, nil,
-				errors.New(fmt.Sprintf("id(%s) is already exist.", id)),
-			),
+		errs := view.NewErrResponse(
+			400,
+			errors.New(fmt.Sprintf("id(%s) is already exist.", id)),
 		)
+		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 		return
 	}
 	if err := ctrl.DB.InsertUserInfo(
 			id,
 			service.CreateHashWithPassord(password),
 		); err != nil {
-			cxt.JSON(
-				http.StatusInternalServerError,
-				view.MakeSignResponse(
-					http.StatusInternalServerError,
-					nil, err,
-				),
-			)
+			errs := view.NewErrResponse(500, err)
+			cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 			return
 	}
 
 	// create token //
 	token, err := service.CreateToken(id)
 	if err != nil {
-		cxt.JSON(
-			http.StatusInternalServerError,
-			view.MakeSignResponse(
-				http.StatusInternalServerError,
-				nil, err,
-			),
-		)
+		errs := view.NewErrResponse(500, err)
+		cxt.JSON(http.StatusOK, view.NewSignResponse(nil, errs))
 	}
-	cxt.JSON(
-		http.StatusOK,
-		view.MakeSignResponse(http.StatusOK, &token, nil),
-	)
+	cxt.JSON(http.StatusOK, view.NewSignResponse(&token, nil))
 }
