@@ -10,7 +10,7 @@ import(
 	"github.com/SaKu2110/sign-server/pkg/model/service"
 )
 
-func (ctrl *Controller) SignUpHandler (cxt *gin.Context) {
+func (ctrl *Controller) SignUpHandler(cxt *gin.Context) {
 	var id, password string
 	if id = cxt.GetHeader("UserId"); id == "" {
 		service.ShowLogInfo(
@@ -63,7 +63,7 @@ func (ctrl *Controller) SignUpHandler (cxt *gin.Context) {
 	}
 
 	// create token //
-	token, err := service.CreateToken(id)
+	token, err := service.CreateJWTToken(id)
 	if err != nil {
 		service.ShowLogWarn(err)
 		errs := view.NewErrResponse(500, err)

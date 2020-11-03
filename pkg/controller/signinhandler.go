@@ -68,7 +68,7 @@ func (ctrl *Controller) SignInHandler(cxt *gin.Context) {
 	}
 
 	// create token //
-	token, err := service.CreateToken(id)
+	token, err := service.CreateJWTToken(id)
 	if err != nil {
 		service.ShowLogWarn(err)
 		errs := view.NewErrResponse(500, err)

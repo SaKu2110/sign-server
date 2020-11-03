@@ -5,7 +5,7 @@ import(
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-func CreateToken(id string) (string, error) {
+func CreateJWTToken(id string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
     claims["id"] = id
