@@ -1,10 +1,11 @@
 package main
 
-import(
+import (
 	"log"
-	"github.com/SaKu2110/sign-server/pkg/server"
-	"github.com/SaKu2110/sign-server/pkg/model/dao"
+
 	"github.com/SaKu2110/sign-server/pkg/controller"
+	"github.com/SaKu2110/sign-server/pkg/model/dao"
+	"github.com/SaKu2110/sign-server/pkg/server"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	ctrl := controller.Init(db)
+	ctrl := controller.New(db)
 	if err := server.Router(ctrl).Run(); err != nil {
 		log.Fatal(err)
 	}
