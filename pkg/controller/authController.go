@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/SaKu2110/sign-server/pkg/model/dao"
 	"github.com/SaKu2110/sign-server/pkg/model/service/crypto"
 	"github.com/SaKu2110/sign-server/pkg/model/service/jwt"
+	"github.com/SaKu2110/sign-server/pkg/view"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,52 +26,66 @@ func (c *Controller) Auth() AuthResolver {
 func (r *authResolver) SignInHandler(c *gin.Context) {
 	var id, password string
 	if id = c.GetHeader("UserId"); id == "" {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if password = c.GetHeader("Password"); password == "" {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	users, err := r.DB.GetUserInfo(id)
 	if err != nil {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if len(users) < 1 {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if users[0].Password != crypto.Hash(password) {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
-	_, err = jwt.Token(id)
+	token, err := jwt.Token(id)
 	if err != nil {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
+	c.JSON(http.StatusOK, view.NewAuthReponse(&token, nil))
 }
 
 func (r *authResolver) SignUpHandler(c *gin.Context) {
 	var id, password string
 	if id = c.GetHeader("UserId"); id == "" {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if password = c.GetHeader("Password"); password == "" {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	users, err := r.DB.GetUserInfo(id)
 	if err != nil {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if len(users) > 0 {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 	if err := r.DB.InsertUserInfo(
 		id,
 		crypto.Hash(password),
 	); err != nil {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
 
 	// create token //
-	_, err = jwt.Token(id)
+	token, err := jwt.Token(id)
 	if err != nil {
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
+	c.JSON(http.StatusOK, view.NewAuthReponse(&token, nil))
 }
