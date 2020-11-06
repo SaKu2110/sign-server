@@ -2,7 +2,8 @@ package controller
 
 import (
 	"github.com/SaKu2110/sign-server/pkg/model/dao"
-	"github.com/SaKu2110/sign-server/pkg/model/service"
+	"github.com/SaKu2110/sign-server/pkg/model/service/crypto"
+	"github.com/SaKu2110/sign-server/pkg/model/service/jwt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,10 +35,10 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 	if len(users) < 1 {
 		return
 	}
-	if users[0].Password != service.CreateHashWithPassord(password) {
+	if users[0].Password != crypto.Hash(password) {
 		return
 	}
-	_, err = service.CreateJWTToken(id)
+	_, err = jwt.Token(id)
 	if err != nil {
 		return
 	}
@@ -60,13 +61,13 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 	}
 	if err := r.DB.InsertUserInfo(
 		id,
-		service.CreateHashWithPassord(password),
+		crypto.Hash(password),
 	); err != nil {
 		return
 	}
 
 	// create token //
-	_, err = service.CreateJWTToken(id)
+	_, err = jwt.Token(id)
 	if err != nil {
 		return
 	}
