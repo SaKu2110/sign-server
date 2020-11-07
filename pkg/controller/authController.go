@@ -71,6 +71,7 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 }
 
 func (r *authResolver) SignUpHandler(c *gin.Context) {
+	log.Debug("Get /signup request")
 	var id, password string
 	if id = c.GetHeader("UserId"); id == "" {
 		log.Info("UserId value is empty.")
@@ -105,7 +106,6 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
-
 	// create token //
 	token, err := jwt.Token(id)
 	if err != nil {

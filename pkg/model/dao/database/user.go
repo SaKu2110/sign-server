@@ -32,7 +32,8 @@ type userRepository struct {
 }
 
 func newUserClient() (UserRepository, error) {
-	var db sql.DB
+	var db *sql.DB
+	var err error
 	token, err := config.UserDBAccessToken()
 	if err != nil {
 		return nil, err
@@ -41,7 +42,7 @@ func newUserClient() (UserRepository, error) {
 		if i == BACKOFF_MAX_CONNS {
 			return nil, errors.New("Faild connection user database")
 		}
-		db, err := sql.Open("mysql", token)
+		db, err = sql.Open("mysql", token)
 		if err != nil {
 			return nil, err
 		}
@@ -53,10 +54,10 @@ func newUserClient() (UserRepository, error) {
 		// Exponential Backoff //
 		backoff(i)
 	}
-	if err := setConnConfigs(db); err != nil {
+	if err := setConnConfigs(*db); err != nil {
 		return nil, err
 	}
-	return &userRepository{DB: &db}, nil
+	return &userRepository{DB: db}, nil
 }
 func setConnConfigs(db sql.DB) error {
 	maxConn, maxIdle, maxlifetime, err := config.DBConnectionInfo()
