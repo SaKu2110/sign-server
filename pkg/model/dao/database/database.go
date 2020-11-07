@@ -1,5 +1,9 @@
 package database
 
+import (
+	"github.com/SaKu2110/sign-server/pkg/model/service/log"
+)
+
 type DB struct {
 	UserDB UserRepository
 }
@@ -13,5 +17,6 @@ func New() (*DB, error) {
 }
 
 func (db *DB) Close() {
+	log.Info("Close Databases connection.")
 	db.UserDB.Close()
 }

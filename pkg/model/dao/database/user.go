@@ -3,8 +3,11 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"math"
 	"time"
+
+	"github.com/SaKu2110/sign-server/pkg/model/service/log"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -36,7 +39,7 @@ func newUserClient() (UserRepository, error) {
 	}
 	for i := 0; ; i++ {
 		if i == BACKOFF_MAX_CONNS {
-			return nil, errors.New("faild connection user database")
+			return nil, errors.New("Faild connection user database")
 		}
 		db, err := sql.Open("mysql", token)
 		if err != nil {
@@ -46,6 +49,7 @@ func newUserClient() (UserRepository, error) {
 		if err := db.Ping(); err == nil {
 			break
 		}
+		log.Warn(fmt.Sprintf("Faild connection `user` Database. (retry: %d)", i))
 		// Exponential Backoff //
 		backoff(i)
 	}

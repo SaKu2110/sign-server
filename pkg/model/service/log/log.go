@@ -4,9 +4,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// Debug 開発中のデバッグ情報
+func Debug(msg string) {
+	log.WithFields(log.Fields{}).Debug(msg)
+}
+
 // Error 直ちに対処する必要のない実行時エラー
-func Error(msg string) {
-	log.WithFields(log.Fields{}).Error(msg)
+func Error(err error) {
+	log.WithFields(log.Fields{}).Error(err)
 }
 
 // Fatal 致命的なエラー
@@ -20,6 +25,6 @@ func Info(msg string) {
 }
 
 // Warn エラーではないが例外的なもの
-func Warn(err error) {
-	log.WithFields(log.Fields{}).Warn(err)
+func Warn(msg string) {
+	log.WithFields(log.Fields{}).Warn(msg)
 }
