@@ -7,7 +7,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-type dbAccessConfig struct {
+type userDBAccessConfig struct {
 	User string `envconfig:"DB_USER" default:"auth_user"`
 	Pass string `envconfig:"DB_PASS" default:"password"`
 	IP   string `envconfig:"DB_IP" default:"localhost"`
@@ -23,8 +23,8 @@ type dbConnConfig struct {
 
 const accessTokenTemplate = "%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 
-func DBAccessToken() (string, error) {
-	var c dbAccessConfig
+func UserDBAccessToken() (string, error) {
+	var c userDBAccessConfig
 	if err := envconfig.Process("", &c); err != nil {
 		return "", err
 	}
