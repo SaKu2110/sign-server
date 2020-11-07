@@ -25,7 +25,7 @@ func errorMessage(code int) string {
 // NewAuthReponse returns sign handler response
 func NewAuthReponse(token *string, err *dto.Error) dto.AuthResponse {
 	if err != nil {
-		return dto.AuthResponse{}
+		return dto.AuthResponse{Token: "", Err: err}
 	}
-	return dto.AuthResponse{Token: *token}
+	return dto.AuthResponse{Token: *token, Err: nil}
 }
