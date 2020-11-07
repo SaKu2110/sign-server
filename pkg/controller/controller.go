@@ -1,13 +1,11 @@
 package controller
 
-import (
-	"github.com/SaKu2110/sign-server/pkg/model/dao"
-)
+import "github.com/SaKu2110/sign-server/pkg/model/dao/database"
 
 type Controller struct {
-	DB *dao.DB
+	UserDB database.UserRepository
 }
 
-func New(db *dao.DB) Controller {
-	return Controller{DB: db}
+func New(db *database.DB) Controller {
+	return Controller{UserDB: db.UserDB}
 }

@@ -3,8 +3,8 @@ package controller
 import (
 	"net/http"
 
-	"github.com/SaKu2110/sign-server/pkg/model/dao"
-	"github.com/SaKu2110/sign-server/pkg/model/service/crypto"
+	"github.com/SaKu2110/sign-server/pkg/model/dao/database"
+	"github.com/SaKu2110/sign-server/pkg/model/service/auth"
 	"github.com/SaKu2110/sign-server/pkg/model/service/jwt"
 	"github.com/SaKu2110/sign-server/pkg/view"
 	"github.com/gin-gonic/gin"
@@ -16,11 +16,11 @@ type AuthResolver interface {
 }
 
 type authResolver struct {
-	DB *dao.DB
+	UserDB database.UserRepository
 }
 
 func (c *Controller) Auth() AuthResolver {
-	return &authResolver{DB: c.DB}
+	return &authResolver{UserDB: c.UserDB}
 }
 
 func (r *authResolver) SignInHandler(c *gin.Context) {
@@ -33,7 +33,7 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
-	users, err := r.DB.GetUserInfo(id)
+	users, err := r.UserDB.Get(id)
 	if err != nil {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
@@ -42,10 +42,12 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
-	if users[0].Password != crypto.Hash(password) {
+	if !auth.CheckPassword(users[0], password) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
+
+	// create token //
 	token, err := jwt.Token(id)
 	if err != nil {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
@@ -64,7 +66,7 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
-	users, err := r.DB.GetUserInfo(id)
+	users, err := r.UserDB.Get(id)
 	if err != nil {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
@@ -73,10 +75,9 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
-	if err := r.DB.InsertUserInfo(
-		id,
-		crypto.Hash(password),
-	); err != nil {
+
+	password = auth.Hash(password)
+	if err := r.UserDB.Add(id, password); err != nil {
 		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
 		return
 	}
