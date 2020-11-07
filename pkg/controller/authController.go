@@ -29,28 +29,33 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 	var id, password string
 	if id = c.GetHeader("UserId"); id == "" {
 		log.Info("UserId value is empty.")
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(101411)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	if password = c.GetHeader("Password"); password == "" {
 		log.Info("Password value is empty.")
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(101411)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	users, err := r.UserDB.Get(id)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(301500)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	if len(users) < 1 {
 		log.Info(fmt.Sprintf("There was no corresponding data about ID(%s) in the `user` Database.", id))
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(101401)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	if !auth.CheckPassword(users[0], password) {
 		log.Info("Password is incorrect.")
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(101401)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 
@@ -58,7 +63,8 @@ func (r *authResolver) SignInHandler(c *gin.Context) {
 	token, err := jwt.Token(id)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(501500)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	c.JSON(http.StatusOK, view.NewAuthReponse(&token, nil))
@@ -68,30 +74,35 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 	var id, password string
 	if id = c.GetHeader("UserId"); id == "" {
 		log.Info("UserId value is empty.")
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(102411)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	if password = c.GetHeader("Password"); password == "" {
 		log.Info("Passwrod value is empty.")
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(102411)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	users, err := r.UserDB.Get(id)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(302500)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	if l := len(users); l > 0 {
 		log.Info(fmt.Sprintf("There was %d corresponding data about ID(%s) in the `user` Database.", l, id))
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(102401)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 
 	password = auth.Hash(password)
 	if err := r.UserDB.Add(id, password); err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(302500)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 
@@ -99,7 +110,8 @@ func (r *authResolver) SignUpHandler(c *gin.Context) {
 	token, err := jwt.Token(id)
 	if err != nil {
 		log.Error(err)
-		c.JSON(http.StatusOK, view.NewAuthReponse(nil, nil))
+		errs := view.NewError(502500)
+		c.JSON(http.StatusOK, view.NewAuthReponse(nil, errs))
 		return
 	}
 	c.JSON(http.StatusOK, view.NewAuthReponse(&token, nil))
