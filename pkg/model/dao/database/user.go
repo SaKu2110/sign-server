@@ -54,13 +54,16 @@ func newUserClient() (UserRepository, error) {
 		// Exponential Backoff //
 		backoff(i)
 	}
-	if err := setConnConfigs(*db); err != nil {
+	if err := setConnConfigs(db); err != nil {
 		return nil, err
 	}
 	return &userRepository{DB: db}, nil
 }
-func setConnConfigs(db sql.DB) error {
+func setConnConfigs(db *sql.DB) error {
 	maxConn, maxIdle, maxlifetime, err := config.DBConnectionInfo()
+	log.Info(fmt.Sprintf("DB Connection info: Max open connections->%d", maxConn))
+	log.Info(fmt.Sprintf("DB Connection info: Max idle->%d", maxIdle))
+	log.Info(fmt.Sprintf("DB Connection info: Max lifetime->%ds", maxlifetime))
 	if err != nil {
 		return err
 	}
